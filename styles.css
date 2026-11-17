@@ -1,0 +1,595 @@
+/* Typed Pages
+   ==========================================================================
+   TAGS: Obsidian's default tag look, coloured by family.
+   Only Obsidian's own variables are set (--tag-* on Reading view tags and
+   Live Preview hashtags, --pill-* on Properties chips), and the attribute
+   selectors sit inside :where(), so a theme that draws its own tags (such as
+   Plectics Alto) wins without trying. Families come from the plugin's marks:
+     a.tag[data-tag-kind]                 Reading view
+     .multi-select-pill[data-tag-kind]    Properties chips (+ data-tag)
+     .plx-tg-kind[data-tag-kind]          Live Preview mark (+ data-tag)
+     .plx-tg-rest                         the part from the first "/" on
+   In the tags property Obsidian itself sets --pill-color: var(--tag-color)
+   (and the same for background and hover) on each chip, at a higher
+   specificity than these rules, so the chip rules set --tag-* as well.
+   Text: the family colour. Background: 15 % of it, 25 % on hover.
+   Later rules win over earlier ones (equal specificity), so the status
+   sub-families follow "status", and Half follows the base look.
+   ========================================================================== */
+
+/* topic */
+a.tag:where([data-tag-kind="topic"]),
+.cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag-kind="topic"])),
+.cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag-kind="topic"])) {
+  --tag-color: var(--color-cyan);
+  --tag-color-hover: var(--color-cyan);
+  --tag-background: rgba(var(--color-cyan-rgb), 0.15);
+  --tag-background-hover: rgba(var(--color-cyan-rgb), 0.25);
+  --tag-border-color: rgba(var(--color-cyan-rgb), 0.15);
+}
+.multi-select-pill:where([data-tag-kind="topic"]) {
+  --pill-color: var(--color-cyan);
+  --pill-color-hover: var(--color-cyan);
+  --pill-background: rgba(var(--color-cyan-rgb), 0.15);
+  --pill-background-hover: rgba(var(--color-cyan-rgb), 0.25);
+  --pill-border-color: rgba(var(--color-cyan-rgb), 0.15);
+  --tag-color: var(--color-cyan);
+  --tag-color-hover: var(--color-cyan);
+  --tag-background: rgba(var(--color-cyan-rgb), 0.15);
+  --tag-background-hover: rgba(var(--color-cyan-rgb), 0.25);
+  --tag-border-color: rgba(var(--color-cyan-rgb), 0.15);
+}
+
+/* type */
+a.tag:where([data-tag-kind="type"]),
+.cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag-kind="type"])),
+.cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag-kind="type"])) {
+  --tag-color: var(--color-purple);
+  --tag-color-hover: var(--color-purple);
+  --tag-background: rgba(var(--color-purple-rgb), 0.15);
+  --tag-background-hover: rgba(var(--color-purple-rgb), 0.25);
+  --tag-border-color: rgba(var(--color-purple-rgb), 0.15);
+}
+.multi-select-pill:where([data-tag-kind="type"]) {
+  --pill-color: var(--color-purple);
+  --pill-color-hover: var(--color-purple);
+  --pill-background: rgba(var(--color-purple-rgb), 0.15);
+  --pill-background-hover: rgba(var(--color-purple-rgb), 0.25);
+  --pill-border-color: rgba(var(--color-purple-rgb), 0.15);
+  --tag-color: var(--color-purple);
+  --tag-color-hover: var(--color-purple);
+  --tag-background: rgba(var(--color-purple-rgb), 0.15);
+  --tag-background-hover: rgba(var(--color-purple-rgb), 0.25);
+  --tag-border-color: rgba(var(--color-purple-rgb), 0.15);
+}
+
+/* status */
+a.tag:where([data-tag-kind="status"]),
+.cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag-kind="status"])),
+.cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag-kind="status"])) {
+  --tag-color: var(--color-yellow);
+  --tag-color-hover: var(--color-yellow);
+  --tag-background: rgba(var(--color-yellow-rgb), 0.15);
+  --tag-background-hover: rgba(var(--color-yellow-rgb), 0.25);
+  --tag-border-color: rgba(var(--color-yellow-rgb), 0.15);
+}
+.multi-select-pill:where([data-tag-kind="status"]) {
+  --pill-color: var(--color-yellow);
+  --pill-color-hover: var(--color-yellow);
+  --pill-background: rgba(var(--color-yellow-rgb), 0.15);
+  --pill-background-hover: rgba(var(--color-yellow-rgb), 0.25);
+  --pill-border-color: rgba(var(--color-yellow-rgb), 0.15);
+  --tag-color: var(--color-yellow);
+  --tag-color-hover: var(--color-yellow);
+  --tag-background: rgba(var(--color-yellow-rgb), 0.15);
+  --tag-background-hover: rgba(var(--color-yellow-rgb), 0.25);
+  --tag-border-color: rgba(var(--color-yellow-rgb), 0.15);
+}
+
+/* status/stable */
+a.tag:where([data-tag-kind="status"][href="#status/stable" i]),
+.cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag="status/stable" i])),
+.cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag="status/stable" i])) {
+  --tag-color: var(--color-green);
+  --tag-color-hover: var(--color-green);
+  --tag-background: rgba(var(--color-green-rgb), 0.15);
+  --tag-background-hover: rgba(var(--color-green-rgb), 0.25);
+  --tag-border-color: rgba(var(--color-green-rgb), 0.15);
+}
+.multi-select-pill:where([data-tag="status/stable" i]) {
+  --pill-color: var(--color-green);
+  --pill-color-hover: var(--color-green);
+  --pill-background: rgba(var(--color-green-rgb), 0.15);
+  --pill-background-hover: rgba(var(--color-green-rgb), 0.25);
+  --pill-border-color: rgba(var(--color-green-rgb), 0.15);
+  --tag-color: var(--color-green);
+  --tag-color-hover: var(--color-green);
+  --tag-background: rgba(var(--color-green-rgb), 0.15);
+  --tag-background-hover: rgba(var(--color-green-rgb), 0.25);
+  --tag-border-color: rgba(var(--color-green-rgb), 0.15);
+}
+
+/* status/empty, status/trash */
+a.tag:where([data-tag-kind="status"][href="#status/empty" i]),
+a.tag:where([data-tag-kind="status"][href="#status/trash" i]),
+.cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag="status/empty" i])),
+.cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag="status/empty" i])),
+.cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag="status/trash" i])),
+.cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag="status/trash" i])) {
+  --tag-color: var(--color-red);
+  --tag-color-hover: var(--color-red);
+  --tag-background: rgba(var(--color-red-rgb), 0.15);
+  --tag-background-hover: rgba(var(--color-red-rgb), 0.25);
+  --tag-border-color: rgba(var(--color-red-rgb), 0.15);
+}
+.multi-select-pill:where([data-tag="status/empty" i]),
+.multi-select-pill:where([data-tag="status/trash" i]) {
+  --pill-color: var(--color-red);
+  --pill-color-hover: var(--color-red);
+  --pill-background: rgba(var(--color-red-rgb), 0.15);
+  --pill-background-hover: rgba(var(--color-red-rgb), 0.25);
+  --pill-border-color: rgba(var(--color-red-rgb), 0.15);
+  --tag-color: var(--color-red);
+  --tag-color-hover: var(--color-red);
+  --tag-background: rgba(var(--color-red-rgb), 0.15);
+  --tag-background-hover: rgba(var(--color-red-rgb), 0.25);
+  --tag-border-color: rgba(var(--color-red-rgb), 0.15);
+}
+
+/* author */
+a.tag:where([data-tag-kind="author"]),
+.cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag-kind="author"])),
+.cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag-kind="author"])) {
+  --tag-color: var(--color-orange);
+  --tag-color-hover: var(--color-orange);
+  --tag-background: rgba(var(--color-orange-rgb), 0.15);
+  --tag-background-hover: rgba(var(--color-orange-rgb), 0.25);
+  --tag-border-color: rgba(var(--color-orange-rgb), 0.15);
+}
+.multi-select-pill:where([data-tag-kind="author"]) {
+  --pill-color: var(--color-orange);
+  --pill-color-hover: var(--color-orange);
+  --pill-background: rgba(var(--color-orange-rgb), 0.15);
+  --pill-background-hover: rgba(var(--color-orange-rgb), 0.25);
+  --pill-border-color: rgba(var(--color-orange-rgb), 0.15);
+  --tag-color: var(--color-orange);
+  --tag-color-hover: var(--color-orange);
+  --tag-background: rgba(var(--color-orange-rgb), 0.15);
+  --tag-background-hover: rgba(var(--color-orange-rgb), 0.25);
+  --tag-border-color: rgba(var(--color-orange-rgb), 0.15);
+}
+
+/* meta */
+a.tag:where([data-tag-kind="meta"]),
+.cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag-kind="meta"])),
+.cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag-kind="meta"])) {
+  --tag-color: var(--text-muted);
+  --tag-color-hover: var(--text-muted);
+  --tag-background: color-mix(in srgb, var(--text-muted) 15%, transparent);
+  --tag-background-hover: color-mix(in srgb, var(--text-muted) 25%, transparent);
+  --tag-border-color: color-mix(in srgb, var(--text-muted) 15%, transparent);
+}
+.multi-select-pill:where([data-tag-kind="meta"]) {
+  --pill-color: var(--text-muted);
+  --pill-color-hover: var(--text-muted);
+  --pill-background: color-mix(in srgb, var(--text-muted) 15%, transparent);
+  --pill-background-hover: color-mix(in srgb, var(--text-muted) 25%, transparent);
+  --pill-border-color: color-mix(in srgb, var(--text-muted) 15%, transparent);
+  --tag-color: var(--text-muted);
+  --tag-color-hover: var(--text-muted);
+  --tag-background: color-mix(in srgb, var(--text-muted) 15%, transparent);
+  --tag-background-hover: color-mix(in srgb, var(--text-muted) 25%, transparent);
+  --tag-border-color: color-mix(in srgb, var(--text-muted) 15%, transparent);
+}
+
+/* custom-1 */
+a.tag:where([data-tag-kind="custom-1"]),
+.cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag-kind="custom-1"])),
+.cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag-kind="custom-1"])) {
+  --tag-color: var(--color-pink);
+  --tag-color-hover: var(--color-pink);
+  --tag-background: rgba(var(--color-pink-rgb), 0.15);
+  --tag-background-hover: rgba(var(--color-pink-rgb), 0.25);
+  --tag-border-color: rgba(var(--color-pink-rgb), 0.15);
+}
+.multi-select-pill:where([data-tag-kind="custom-1"]) {
+  --pill-color: var(--color-pink);
+  --pill-color-hover: var(--color-pink);
+  --pill-background: rgba(var(--color-pink-rgb), 0.15);
+  --pill-background-hover: rgba(var(--color-pink-rgb), 0.25);
+  --pill-border-color: rgba(var(--color-pink-rgb), 0.15);
+  --tag-color: var(--color-pink);
+  --tag-color-hover: var(--color-pink);
+  --tag-background: rgba(var(--color-pink-rgb), 0.15);
+  --tag-background-hover: rgba(var(--color-pink-rgb), 0.25);
+  --tag-border-color: rgba(var(--color-pink-rgb), 0.15);
+}
+
+/* custom-2 */
+a.tag:where([data-tag-kind="custom-2"]),
+.cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag-kind="custom-2"])),
+.cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag-kind="custom-2"])) {
+  --tag-color: var(--color-blue);
+  --tag-color-hover: var(--color-blue);
+  --tag-background: rgba(var(--color-blue-rgb), 0.15);
+  --tag-background-hover: rgba(var(--color-blue-rgb), 0.25);
+  --tag-border-color: rgba(var(--color-blue-rgb), 0.15);
+}
+.multi-select-pill:where([data-tag-kind="custom-2"]) {
+  --pill-color: var(--color-blue);
+  --pill-color-hover: var(--color-blue);
+  --pill-background: rgba(var(--color-blue-rgb), 0.15);
+  --pill-background-hover: rgba(var(--color-blue-rgb), 0.25);
+  --pill-border-color: rgba(var(--color-blue-rgb), 0.15);
+  --tag-color: var(--color-blue);
+  --tag-color-hover: var(--color-blue);
+  --tag-background: rgba(var(--color-blue-rgb), 0.15);
+  --tag-background-hover: rgba(var(--color-blue-rgb), 0.25);
+  --tag-border-color: rgba(var(--color-blue-rgb), 0.15);
+}
+
+/* custom-3 */
+a.tag:where([data-tag-kind="custom-3"]),
+.cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag-kind="custom-3"])),
+.cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag-kind="custom-3"])) {
+  --tag-color: var(--color-green);
+  --tag-color-hover: var(--color-green);
+  --tag-background: rgba(var(--color-green-rgb), 0.15);
+  --tag-background-hover: rgba(var(--color-green-rgb), 0.25);
+  --tag-border-color: rgba(var(--color-green-rgb), 0.15);
+}
+.multi-select-pill:where([data-tag-kind="custom-3"]) {
+  --pill-color: var(--color-green);
+  --pill-color-hover: var(--color-green);
+  --pill-background: rgba(var(--color-green-rgb), 0.15);
+  --pill-background-hover: rgba(var(--color-green-rgb), 0.25);
+  --pill-border-color: rgba(var(--color-green-rgb), 0.15);
+  --tag-color: var(--color-green);
+  --tag-color-hover: var(--color-green);
+  --tag-background: rgba(var(--color-green-rgb), 0.15);
+  --tag-background-hover: rgba(var(--color-green-rgb), 0.25);
+  --tag-border-color: rgba(var(--color-green-rgb), 0.15);
+}
+
+/* ==========================================================================
+   HALF (body.typed-pages-half, the "Half" setting): the part before the
+   first "/" is filled with the family colour; the .plx-tg-rest part keeps
+   the light tint and the family-colour text, with rounded right ends.
+   A tag with no "/" has no .plx-tg-rest, so it is filled whole.
+   ========================================================================== */
+
+/* the rest reaches the tag's right edge: it takes over the tag's end padding */
+:where(body.typed-pages-half a.tag, body.typed-pages-half .cm-hashtag-end) .plx-tg-rest {
+  margin-inline-end: calc(-1 * var(--tag-padding-x));
+  padding-block: var(--tag-padding-y);
+  padding-inline: 0.15em var(--tag-padding-x);
+  border-start-end-radius: var(--tag-radius);
+  border-end-end-radius: var(--tag-radius);
+}
+:where(body.typed-pages-half .multi-select-pill) .plx-tg-rest {
+  padding-block: var(--pill-padding-y);
+  padding-inline: 0.15em var(--pill-padding-x);
+  border-start-end-radius: var(--pill-radius);
+  border-end-end-radius: var(--pill-radius);
+}
+
+/* half: topic */
+:where(body.typed-pages-half) a.tag:where([data-tag-kind="topic"]),
+:where(body.typed-pages-half) .cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag-kind="topic"])),
+:where(body.typed-pages-half) .cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag-kind="topic"])) {
+  --tag-color: var(--text-on-accent);
+  --tag-background: var(--color-cyan);
+}
+:where(body.typed-pages-half) .multi-select-pill:where([data-tag-kind="topic"]) {
+  --pill-color: var(--text-on-accent);
+  --pill-background: var(--color-cyan);
+  --tag-color: var(--text-on-accent);
+  --tag-background: var(--color-cyan);
+}
+:where(body.typed-pages-half a.tag[data-tag-kind="topic"]) .plx-tg-rest,
+:where(body.typed-pages-half .multi-select-pill[data-tag-kind="topic"]) .plx-tg-rest,
+:where(body.typed-pages-half .cm-hashtag-end:has(> .plx-tg-kind[data-tag-kind="topic"])) .plx-tg-rest {
+  background-color: rgba(var(--color-cyan-rgb), 0.15);
+  color: var(--color-cyan);
+}
+
+/* half: type */
+:where(body.typed-pages-half) a.tag:where([data-tag-kind="type"]),
+:where(body.typed-pages-half) .cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag-kind="type"])),
+:where(body.typed-pages-half) .cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag-kind="type"])) {
+  --tag-color: var(--text-on-accent);
+  --tag-background: var(--color-purple);
+}
+:where(body.typed-pages-half) .multi-select-pill:where([data-tag-kind="type"]) {
+  --pill-color: var(--text-on-accent);
+  --pill-background: var(--color-purple);
+  --tag-color: var(--text-on-accent);
+  --tag-background: var(--color-purple);
+}
+:where(body.typed-pages-half a.tag[data-tag-kind="type"]) .plx-tg-rest,
+:where(body.typed-pages-half .multi-select-pill[data-tag-kind="type"]) .plx-tg-rest,
+:where(body.typed-pages-half .cm-hashtag-end:has(> .plx-tg-kind[data-tag-kind="type"])) .plx-tg-rest {
+  background-color: rgba(var(--color-purple-rgb), 0.15);
+  color: var(--color-purple);
+}
+
+/* half: status */
+:where(body.typed-pages-half) a.tag:where([data-tag-kind="status"]),
+:where(body.typed-pages-half) .cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag-kind="status"])),
+:where(body.typed-pages-half) .cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag-kind="status"])) {
+  --tag-color: var(--text-on-accent);
+  --tag-background: var(--color-yellow);
+}
+:where(body.typed-pages-half) .multi-select-pill:where([data-tag-kind="status"]) {
+  --pill-color: var(--text-on-accent);
+  --pill-background: var(--color-yellow);
+  --tag-color: var(--text-on-accent);
+  --tag-background: var(--color-yellow);
+}
+:where(body.typed-pages-half a.tag[data-tag-kind="status"]) .plx-tg-rest,
+:where(body.typed-pages-half .multi-select-pill[data-tag-kind="status"]) .plx-tg-rest,
+:where(body.typed-pages-half .cm-hashtag-end:has(> .plx-tg-kind[data-tag-kind="status"])) .plx-tg-rest {
+  background-color: rgba(var(--color-yellow-rgb), 0.15);
+  color: var(--color-yellow);
+}
+
+/* half: status/stable */
+:where(body.typed-pages-half) a.tag:where([data-tag-kind="status"][href="#status/stable" i]),
+:where(body.typed-pages-half) .cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag="status/stable" i])),
+:where(body.typed-pages-half) .cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag="status/stable" i])) {
+  --tag-color: var(--text-on-accent);
+  --tag-background: var(--color-green);
+}
+:where(body.typed-pages-half) .multi-select-pill:where([data-tag="status/stable" i]) {
+  --pill-color: var(--text-on-accent);
+  --pill-background: var(--color-green);
+  --tag-color: var(--text-on-accent);
+  --tag-background: var(--color-green);
+}
+:where(body.typed-pages-half a.tag[data-tag-kind="status"][href="#status/stable" i]) .plx-tg-rest,
+:where(body.typed-pages-half .multi-select-pill[data-tag="status/stable" i]) .plx-tg-rest,
+:where(body.typed-pages-half .cm-hashtag-end:has(> .plx-tg-kind[data-tag="status/stable" i])) .plx-tg-rest {
+  background-color: rgba(var(--color-green-rgb), 0.15);
+  color: var(--color-green);
+}
+
+/* half: status/empty, status/trash */
+:where(body.typed-pages-half) a.tag:where([data-tag-kind="status"][href="#status/empty" i]),
+:where(body.typed-pages-half) a.tag:where([data-tag-kind="status"][href="#status/trash" i]),
+:where(body.typed-pages-half) .cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag="status/empty" i])),
+:where(body.typed-pages-half) .cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag="status/empty" i])),
+:where(body.typed-pages-half) .cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag="status/trash" i])),
+:where(body.typed-pages-half) .cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag="status/trash" i])) {
+  --tag-color: var(--text-on-accent);
+  --tag-background: var(--color-red);
+}
+:where(body.typed-pages-half) .multi-select-pill:where([data-tag="status/empty" i]),
+:where(body.typed-pages-half) .multi-select-pill:where([data-tag="status/trash" i]) {
+  --pill-color: var(--text-on-accent);
+  --pill-background: var(--color-red);
+  --tag-color: var(--text-on-accent);
+  --tag-background: var(--color-red);
+}
+:where(body.typed-pages-half a.tag[data-tag-kind="status"][href="#status/empty" i]) .plx-tg-rest,
+:where(body.typed-pages-half a.tag[data-tag-kind="status"][href="#status/trash" i]) .plx-tg-rest,
+:where(body.typed-pages-half .multi-select-pill[data-tag="status/empty" i]) .plx-tg-rest,
+:where(body.typed-pages-half .multi-select-pill[data-tag="status/trash" i]) .plx-tg-rest,
+:where(body.typed-pages-half .cm-hashtag-end:has(> .plx-tg-kind[data-tag="status/empty" i])) .plx-tg-rest,
+:where(body.typed-pages-half .cm-hashtag-end:has(> .plx-tg-kind[data-tag="status/trash" i])) .plx-tg-rest {
+  background-color: rgba(var(--color-red-rgb), 0.15);
+  color: var(--color-red);
+}
+
+/* half: author */
+:where(body.typed-pages-half) a.tag:where([data-tag-kind="author"]),
+:where(body.typed-pages-half) .cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag-kind="author"])),
+:where(body.typed-pages-half) .cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag-kind="author"])) {
+  --tag-color: var(--text-on-accent);
+  --tag-background: var(--color-orange);
+}
+:where(body.typed-pages-half) .multi-select-pill:where([data-tag-kind="author"]) {
+  --pill-color: var(--text-on-accent);
+  --pill-background: var(--color-orange);
+  --tag-color: var(--text-on-accent);
+  --tag-background: var(--color-orange);
+}
+:where(body.typed-pages-half a.tag[data-tag-kind="author"]) .plx-tg-rest,
+:where(body.typed-pages-half .multi-select-pill[data-tag-kind="author"]) .plx-tg-rest,
+:where(body.typed-pages-half .cm-hashtag-end:has(> .plx-tg-kind[data-tag-kind="author"])) .plx-tg-rest {
+  background-color: rgba(var(--color-orange-rgb), 0.15);
+  color: var(--color-orange);
+}
+
+/* half: meta */
+:where(body.typed-pages-half) a.tag:where([data-tag-kind="meta"]),
+:where(body.typed-pages-half) .cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag-kind="meta"])),
+:where(body.typed-pages-half) .cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag-kind="meta"])) {
+  --tag-color: var(--text-on-accent);
+  --tag-background: var(--text-muted);
+}
+:where(body.typed-pages-half) .multi-select-pill:where([data-tag-kind="meta"]) {
+  --pill-color: var(--text-on-accent);
+  --pill-background: var(--text-muted);
+  --tag-color: var(--text-on-accent);
+  --tag-background: var(--text-muted);
+}
+:where(body.typed-pages-half a.tag[data-tag-kind="meta"]) .plx-tg-rest,
+:where(body.typed-pages-half .multi-select-pill[data-tag-kind="meta"]) .plx-tg-rest,
+:where(body.typed-pages-half .cm-hashtag-end:has(> .plx-tg-kind[data-tag-kind="meta"])) .plx-tg-rest {
+  background-color: color-mix(in srgb, var(--text-muted) 15%, transparent);
+  color: var(--text-muted);
+}
+
+/* half: custom-1 */
+:where(body.typed-pages-half) a.tag:where([data-tag-kind="custom-1"]),
+:where(body.typed-pages-half) .cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag-kind="custom-1"])),
+:where(body.typed-pages-half) .cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag-kind="custom-1"])) {
+  --tag-color: var(--text-on-accent);
+  --tag-background: var(--color-pink);
+}
+:where(body.typed-pages-half) .multi-select-pill:where([data-tag-kind="custom-1"]) {
+  --pill-color: var(--text-on-accent);
+  --pill-background: var(--color-pink);
+  --tag-color: var(--text-on-accent);
+  --tag-background: var(--color-pink);
+}
+:where(body.typed-pages-half a.tag[data-tag-kind="custom-1"]) .plx-tg-rest,
+:where(body.typed-pages-half .multi-select-pill[data-tag-kind="custom-1"]) .plx-tg-rest,
+:where(body.typed-pages-half .cm-hashtag-end:has(> .plx-tg-kind[data-tag-kind="custom-1"])) .plx-tg-rest {
+  background-color: rgba(var(--color-pink-rgb), 0.15);
+  color: var(--color-pink);
+}
+
+/* half: custom-2 */
+:where(body.typed-pages-half) a.tag:where([data-tag-kind="custom-2"]),
+:where(body.typed-pages-half) .cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag-kind="custom-2"])),
+:where(body.typed-pages-half) .cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag-kind="custom-2"])) {
+  --tag-color: var(--text-on-accent);
+  --tag-background: var(--color-blue);
+}
+:where(body.typed-pages-half) .multi-select-pill:where([data-tag-kind="custom-2"]) {
+  --pill-color: var(--text-on-accent);
+  --pill-background: var(--color-blue);
+  --tag-color: var(--text-on-accent);
+  --tag-background: var(--color-blue);
+}
+:where(body.typed-pages-half a.tag[data-tag-kind="custom-2"]) .plx-tg-rest,
+:where(body.typed-pages-half .multi-select-pill[data-tag-kind="custom-2"]) .plx-tg-rest,
+:where(body.typed-pages-half .cm-hashtag-end:has(> .plx-tg-kind[data-tag-kind="custom-2"])) .plx-tg-rest {
+  background-color: rgba(var(--color-blue-rgb), 0.15);
+  color: var(--color-blue);
+}
+
+/* half: custom-3 */
+:where(body.typed-pages-half) a.tag:where([data-tag-kind="custom-3"]),
+:where(body.typed-pages-half) .cm-hashtag-begin:where(:has(+ .cm-hashtag-end > .plx-tg-kind[data-tag-kind="custom-3"])),
+:where(body.typed-pages-half) .cm-hashtag-end:where(:has(> .plx-tg-kind[data-tag-kind="custom-3"])) {
+  --tag-color: var(--text-on-accent);
+  --tag-background: var(--color-green);
+}
+:where(body.typed-pages-half) .multi-select-pill:where([data-tag-kind="custom-3"]) {
+  --pill-color: var(--text-on-accent);
+  --pill-background: var(--color-green);
+  --tag-color: var(--text-on-accent);
+  --tag-background: var(--color-green);
+}
+:where(body.typed-pages-half a.tag[data-tag-kind="custom-3"]) .plx-tg-rest,
+:where(body.typed-pages-half .multi-select-pill[data-tag-kind="custom-3"]) .plx-tg-rest,
+:where(body.typed-pages-half .cm-hashtag-end:has(> .plx-tg-kind[data-tag-kind="custom-3"])) .plx-tg-rest {
+  background-color: rgba(var(--color-green-rgb), 0.15);
+  color: var(--color-green);
+}
+
+/* ==========================================================================
+   TITLES (Display Title's stylesheet, unchanged)
+   ========================================================================== */
+
+/* Plectics Display Title
+   Our title element also carries `.inline-title`, so Obsidian's and the
+   theme's inline-title styling (font, size, rules, page-type kicker) applies
+   to it unchanged. Hooks for themes:
+     .plx-has-display-title   on the view container (.workspace-leaf-content)
+     .plx-display-title       the editable display title
+     .plx-display-title-file  the "file: …" caption
+     .plx-vh-title / .plx-tab-title / .plx-explorer-title   header/tab/explorer text
+*/
+
+/* Native title elements: visually hidden but still laid out and focusable,
+   so F2 / "Rename file" and Obsidian's own rename handlers keep working. */
+:not(.plx-native-editing):not(.is-being-renamed) > .plx-native-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  overflow: hidden !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* While a native title is being edited (rename), show it and hide ours. */
+.plx-native-editing > .plx-dt-sib,
+.is-being-renamed > .plx-dt-sib {
+  display: none !important;
+}
+
+/* ---- the display title ---- */
+.plx-display-title {
+  cursor: text;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  outline: none;
+  caret-color: var(--plx-accent, var(--text-accent));
+}
+.plx-display-title:focus {
+  outline: none;
+}
+.plx-display-title:empty::after {
+  /* keep the double rule from collapsing when the text is cleared */
+  content: "";
+}
+.plx-display-title:focus:empty {
+  min-height: 1.1em;
+}
+.plx-display-title.is-draft:not(:focus) {
+  opacity: 0.6;
+}
+
+/* ---- the file-name caption ---- */
+.plx-display-title-file {
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0.55em 0 0.9em;
+  padding: 0;
+  font-family: var(--plx-mono, var(--font-monospace));
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--plx-ink-3, var(--text-faint));
+  opacity: 0.8;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: var(--plx-r, var(--radius-s));
+}
+.plx-display-title-file:hover,
+.plx-display-title-file:focus-visible {
+  opacity: 1;
+  color: var(--plx-ink-2, var(--text-muted));
+  text-decoration: underline;
+  text-decoration-color: var(--plx-rule, var(--background-modifier-border));
+  text-underline-offset: 2px;
+  outline: none;
+}
+/* the caption replaces the title's bottom margin */
+.plx-display-title + .plx-display-title-file {
+  margin-top: 0.55em;
+}
+
+/* ---- header / tab / explorer text ---- */
+.plx-vh-title {
+  cursor: text;
+}
+.plx-explorer-title {
+  /* sits where the native name sits; nothing else to do */
+}
+
+/* ---- modal ---- */
+.plx-display-title-modal-note {
+  margin-top: 0;
+  font-size: var(--font-ui-small);
+  color: var(--plx-ink-3, var(--text-muted));
+}
+.plx-display-title-modal-input {
+  width: 100%;
+}

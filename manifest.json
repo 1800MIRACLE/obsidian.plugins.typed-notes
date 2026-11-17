@@ -1,0 +1,10 @@
+{
+	"id": "typed-notes",
+	"name": "Typed Notes",
+	"version": "1.0.0",
+	"minAppVersion": "1.6.0",
+	"description": "Organize notes with colour-coded tag families, custom tag groups, and display titles without renaming files.",
+	"author": "1800MIRACLE",
+	"authorUrl": "https://github.com/1800MIRACLE",
+	"isDesktopOnly": false
+}
