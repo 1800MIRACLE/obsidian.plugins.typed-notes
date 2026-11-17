@@ -519,6 +519,7 @@ class DisplayTitles {
     const view = rec.view;
     const sel = el.ownerDocument.getSelection();
     if (sel && sel.rangeCount && el.contains(sel.anchorNode)) sel.removeAllRanges();
+    const wasDraft = this.drafts.has(view);
     this.drafts.delete(view);
     rec.editFile = null;
     if (rec.cancel || !file) {
@@ -528,7 +529,8 @@ class DisplayTitles {
     }
     const value = normalizeTitle(el.textContent);
     const current = this.getTitle(file) || "";
-    if (value === current) {
+    // Focusing an existing title must not revert a concurrent property edit.
+    if (value === current || !wasDraft && value === normalizeTitle(rec.editStart)) {
       this.syncAll();
       return;
     }
@@ -795,6 +797,7 @@ class TypedPages extends Plugin {
         pending.clear();
       };
       const obs = new win.MutationObserver((records) => {
+        const addedRoots = new Set();
         for (const record of records) {
           const target = record.target.nodeType === 1 ? record.target : record.target.parentElement;
           const property = target?.closest(TAG_PROPERTY);
@@ -803,10 +806,17 @@ class TypedPages extends Plugin {
           } else {
             for (const node of record.addedNodes) {
               if (node.nodeType !== 1) continue;
-              if (node.matches(TAG_PROPERTY)) pending.add(node);
-              for (const added of node.querySelectorAll(TAG_PROPERTY)) pending.add(added);
+              addedRoots.add(node);
             }
           }
+        }
+        for (const node of addedRoots) {
+          // A parent scan already discovers descendants inserted in the same delivery.
+          let parent = addedRoots.size > 1 ? node.parentElement : null;
+          while (parent && !addedRoots.has(parent)) parent = parent.parentElement;
+          if (parent) continue;
+          if (node.matches(TAG_PROPERTY)) pending.add(node);
+          for (const added of node.querySelectorAll(TAG_PROPERTY)) pending.add(added);
         }
         if (pending.size && frame === null) frame = win.requestAnimationFrame(run);
       });
@@ -832,7 +842,13 @@ class TypedPages extends Plugin {
       mark(doc);
     };
     this.watch = watch;
-    this.app.workspace.onLayoutReady(() => watch(document));
+    this.app.workspace.onLayoutReady(() => {
+      watch(document);
+      this.app.workspace.iterateAllLeaves((leaf) => {
+        const doc = leaf.view.containerEl?.ownerDocument;
+        if (doc) watch(doc);
+      });
+    });
     this.registerEvent(this.app.workspace.on("window-open", (win) => watch(win.doc)));
 
     /* the parts the test harness does not stub: settings, Reading view, Live Preview */

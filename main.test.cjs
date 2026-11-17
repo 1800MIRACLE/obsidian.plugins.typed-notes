@@ -97,7 +97,7 @@ function property(parent, tag) {
   return { row, pill, content };
 }
 
-function load(doc, ready = true, stored, api = {}) {
+function load(doc, ready = true, stored, api = {}, existingDocuments = [], modules = {}) {
   let layoutReady;
   const saved = [];
   const events = new Map();
@@ -106,9 +106,12 @@ function load(doc, ready = true, stored, api = {}) {
       this.app = { workspace: {
         onLayoutReady(callback) { layoutReady = callback; if (ready) callback(); },
         on(name, callback) { events.set(name, callback); return callback; },
+        iterateAllLeaves(visit) { existingDocuments.forEach((ownerDocument) => visit({ view: { containerEl: { ownerDocument } } })); },
       } };
     }
     registerEvent() {}
+    registerMarkdownPostProcessor(callback) { this.postProcess = callback; }
+    registerEditorExtension(extension) { this.editorExtension = extension; }
   }
   // an optional data.json: loadData/saveData exist only when a test passes one
   if (stored !== undefined) {
@@ -119,7 +122,11 @@ function load(doc, ready = true, stored, api = {}) {
     Plugin.prototype.saveData = async (data) => { saved.push(JSON.parse(JSON.stringify(data))); };
   }
   const context = {
-    require(name) { assert.equal(name, "obsidian"); return { Plugin, ...api }; },
+    require(name) {
+      if (name in modules) return modules[name];
+      assert.equal(name, "obsidian");
+      return { Plugin, ...api };
+    },
     module: { exports: {} }, document: doc,
     MutationObserver: doc.defaultView.MutationObserver,
   };
@@ -137,6 +144,52 @@ test("families and original tag spelling remain compatible with theme selectors"
   const rows = cases.map(([tag]) => property(doc.body, tag));
   const { plugin } = load(doc);
   rows.forEach(({ pill }, i) => assert.deepEqual(pill.dataset, { tag: cases[i][1], tagKind: cases[i][2] }));
+  plugin.onunload();
+});
+
+test("Reading and Live Preview expose Plectics family and Half path hooks", async () => {
+  const modules = {
+    "@codemirror/view": {
+      Decoration: { mark: (spec) => spec },
+      ViewPlugin: { fromClass: (implementation) => implementation },
+    },
+    "@codemirror/state": {
+      RangeSetBuilder: class {
+        constructor() { this.ranges = []; }
+        add(from, to, decoration) { this.ranges.push({ from, to, decoration }); }
+        finish() { return this.ranges; }
+      },
+    },
+    "@codemirror/language": {
+      syntaxTree: (state) => ({ iterate: ({ enter }) => enter({ name: "hashtag-end", from: 0, to: state.text.length }) }),
+    },
+  };
+  const { plugin, loaded } = load(documentStub(), true, { tags: { custom: ["project"] } }, {}, [], modules);
+  await loaded;
+  for (const [text, kind] of [["type/Note", "type"], ["form/Note", "type"], ["status/stable", "status"],
+    ["author/Name", "author"], ["meta/Test", "meta"], ["project/Alpha", "custom-1"], ["science/topic", "topic"]]) {
+    const firstChild = { nodeType: 3, nodeValue: text };
+    const anchor = {
+      dataset: {}, firstChild, childNodes: [firstChild],
+      ownerDocument: { createElement: () => ({}) },
+      getAttribute: () => `#${text}`,
+      querySelector: () => null,
+      appendChild(node) { this.childNodes.push(node); },
+    };
+    plugin.postProcess({ querySelectorAll: () => [anchor] });
+    assert.equal(anchor.dataset.tagKind, kind);
+    assert.equal(anchor.childNodes[1].className, "plx-tg-rest");
+    assert.equal(firstChild.nodeValue + anchor.childNodes[1].textContent, text, "reading tag spelling is preserved");
+
+    const state = { text, doc: { sliceString: (from, to) => text.slice(from, to) } };
+    const extension = new plugin.editorExtension({ state, visibleRanges: [{ from: 0, to: text.length }] });
+    const [family, rest] = extension.decorations;
+    assert.equal(family.decoration.class, "plx-tg-kind");
+    assert.equal(family.decoration.attributes["data-tag-kind"], kind);
+    assert.equal(family.decoration.attributes["data-tag"], text.toLowerCase());
+    assert.equal(rest.decoration.class, "plx-tg-rest");
+    assert.equal(text.slice(rest.from, rest.to), text.slice(text.indexOf("/")));
+  }
   plugin.onunload();
 });
 
@@ -199,6 +252,22 @@ test("unrelated inserted subtrees and detached properties do not trigger documen
   doc.flush();
   assert.equal(tags.row.scans, 0);
   assert.equal(doc.scans, scans);
+  plugin.onunload();
+});
+
+test("nested insertion bursts discover tags with one subtree scan", () => {
+  const doc = documentStub();
+  const { plugin } = load(doc);
+  const wrapper = doc.body.append(new Element("wrapper"));
+  const rows = Array.from({ length: 100 }, () => property(wrapper, "type/note"));
+  const records = rows.map(({ row }) => ({ type: "childList", target: wrapper, addedNodes: [row] }));
+  // Child records can precede their parent's insertion record.
+  records.push({ type: "childList", target: doc.body, addedNodes: [wrapper] });
+  doc.mutate(records);
+  assert.equal(wrapper.scans + rows.reduce((sum, { row }) => sum + row.scans, 0), 1);
+  assert.equal(doc.frames.size, 1);
+  doc.flush();
+  assert.ok(rows.every(({ pill }) => pill.dataset.tagKind === "type"));
   plugin.onunload();
 });
 
@@ -445,4 +514,61 @@ test("unreadable settings use defaults, notify, and cannot overwrite the unread 
   assert.equal(saved.length, 0);
   assert.equal(notices.length, 5);
   plugin.onunload();
+});
+
+
+test("enabling with an existing popout marks tags and applies Half without a window-open event", async () => {
+  const doc = documentStub();
+  const popout = documentStub();
+  const tags = property(popout.body, "type/note");
+  const { plugin, loaded } = load(doc, true, { tags: { half: true } }, {}, [doc, popout, popout]);
+  await loaded;
+  assert.equal(plugin.observers.size, 2);
+  assert.equal(popout.observers.filter((observer) => observer.connected).length, 1);
+  assert.equal(tags.pill.dataset.tagKind, "type");
+  assert.equal(popout.body.classList.contains("typed-pages-half"), true);
+  plugin.onunload();
+  assert.equal(popout.body.classList.contains("typed-pages-half"), false);
+  assert.deepEqual(tags.pill.dataset, {});
+});
+
+test("untouched existing titles preserve concurrent changes while edits and seeded drafts still save", async () => {
+  const h = await titleHarness(1);
+  const titles = h.plugin.titles;
+  const file = h.files[0];
+  const view = h.views[0];
+  const writes = [];
+  h.plugin.app.fileManager = {
+    async processFrontMatter(target, update) {
+      assert.equal(target, file);
+      const frontmatter = { ...h.metadata.get(file)?.frontmatter };
+      update(frontmatter);
+      h.metadata.set(file, { frontmatter });
+      writes.push(frontmatter.title);
+    },
+  };
+  let refreshes = 0;
+  titles.syncAll = () => refreshes++;
+  const rec = {
+    view, file, editFile: file, editStart: "Original title", cancel: false,
+    titleEl: { textContent: "Original title", ownerDocument: { getSelection: () => null } },
+  };
+  h.metadata.set(file, { frontmatter: { title: "Changed externally" } });
+  await titles.commit(rec);
+  assert.deepEqual(writes, []);
+  assert.equal(titles.getTitle(file), "Changed externally");
+  assert.equal(refreshes, 1, "blur refreshes the display from the current property");
+
+  rec.editStart = "Changed externally";
+  rec.titleEl.textContent = "My edit";
+  await titles.commit(rec);
+  assert.deepEqual(writes, ["My edit"]);
+
+  h.metadata.set(file, { frontmatter: {} });
+  rec.editStart = rec.titleEl.textContent = "Suggested title";
+  titles.drafts.set(view, "Suggested title");
+  await titles.commit(rec);
+  assert.deepEqual(writes, ["My edit", "Suggested title"]);
+  assert.equal(titles.drafts.has(view), false);
+  h.plugin.onunload();
 });
